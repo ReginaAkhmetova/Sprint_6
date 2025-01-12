@@ -4,13 +4,14 @@ from selenium.webdriver.common.by import By
 class GeneralLocators:
     """ Локаторы элементов, которые присутствуют на всех страницах сайта. На сайте есть элементы, которые
     присутствуют на всех страницах и лоцируются одним и тем же локатором - я их выделила в отдельный
-    класс локаторов, который можно использовать генерализировано.
+    класс локаторов, который можно использовать генерализировано путем наследования от него остальных
+    классов локаторов.
     """
     LOGO_YANDEX = (By.XPATH, ".//*[@alt='Yandex']")  # логотип Яндекса
     LOGO_SCOOTER = (By.XPATH, ".//*[@alt='Scooter']")  # логотип Самокат
 
 
-class MainPageLocators:
+class MainPageLocators(GeneralLocators):
     """ Локаторы заглавной страницы """
     TITLE = (By.XPATH, "//div[starts-with(@class, 'Home_Header__')]")
     BUTTON_COOCKIE = (By.XPATH, "//button[text()='да все привыкли']")
@@ -28,24 +29,26 @@ class MainPageLocators:
     ORDER_BUTTON_BELOW = (By.XPATH, "(//button[text()='Заказать'])[2]")  # кнопка заказать в блоке Как это работает
     SCROLL_MIDDLE_BUTTON = (By.CLASS_NAME, 'Home_FinishButton__1cWm')
 
-    def question_locator(self, index):
+    @classmethod
+    def question_locator(cls, index):
         """ Эта функция принимает на вход индекс вопроса - от 1 до 8, и возвращает
         локатор, который берется из шаблона QUESTION, где вместо {} метод .format()
         подставит переданный индекс.
         """
-        by, loc = self.QUESTION
+        by, loc = cls.QUESTION
         return by, loc.format(index)
 
-    def answer_locator(self, index):
+    @classmethod
+    def answer_locator(cls, index):
         """ Эта функция принимает на вход индекс ответа - от 1 до 8, и возвращает
         локатор, который берется из шаблона ANSWER, где вместо {} метод .format()
         подставит переданный индекс.
         """
-        by, loc = self.ANSWER
+        by, loc = cls.ANSWER
         return by, loc.format(index)
 
 
-class OrderLocators:
+class OrderLocators(GeneralLocators):
     """ Локаторы страницы заказа самоката. Так как данная страница имеет две формы, вторая из которых
     недоступна, пока не пройдена первая форма - локаторы каждой из них я выделила в отдельный
     подкласс.
@@ -75,7 +78,6 @@ class OrderLocators:
         BUTTON_NEXT = (By.XPATH, "//div[starts-with(@class, 'Order_Buttons__')]/button[text()='Заказать']")
         # форма второго раздела
         FORM_DATE = (By.XPATH, "//input[@placeholder='* Когда привезти самокат']")
-        # FORM_PERIOD = (By.XPATH, ".//*[@class='Dropdown-arrow']") # кнопка выпадающего списка Срок аренды
         FORM_PERIOD = (
             By.XPATH,
             "//div[@class='Dropdown-placeholder' and text()='* Срок аренды']/parent::*//span[@class='Dropdown-arrow']"

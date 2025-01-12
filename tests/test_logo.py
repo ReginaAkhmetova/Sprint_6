@@ -2,7 +2,8 @@ import allure
 
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
-from const import DZEN_URL
+from urls import DZEN_URL
+
 
 class TestLogo:
 
@@ -12,7 +13,7 @@ class TestLogo:
         order_page.open()
         order_page.click_scooter_logo()
         main_page = MainPage(driver)
-        main_page.wait_page_to_be_open()
+        assert main_page.wait_page_to_be_open()
 
     @allure.title('Тест нажатия на логотип Яндекса')
     def test_logo_yandex(self, driver):
@@ -20,4 +21,4 @@ class TestLogo:
         main_page.open()
         main_page.click_yandex_logo()
         main_page.switch_tab()
-        main_page.wait_for_url(DZEN_URL)
+        assert main_page.wait_for_url(DZEN_URL)
